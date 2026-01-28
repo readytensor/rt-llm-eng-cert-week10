@@ -1,0 +1,47 @@
+# LiteLLM Proxy Configuration
+# Docs: https://docs.litellm.ai/docs/proxy/configs
+
+model_list:
+  # OpenAI Models
+  - model_name: gpt-4o
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+
+  # Self-hosted model on Modal (vLLM endpoint)
+  - model_name: lora-summarizer
+    litellm_params:
+      model: openai/summarizer
+      api_base: YOUR_ENDPOINT_URL
+      api_key: os.environ/MODAL_API_KEY
+      # Custom pricing (per token) - set based on your Modal costs
+      input_cost_per_token: 1
+      output_cost_per_token: 2
+
+general_settings:
+  master_key: sk-litellm-master-key  # Change this in production!
+  database_url: os.environ/DATABASE_URL  # For persistent spend tracking
+  store_model_in_db: true
+  store_prompts_in_spend_logs: true
+  budget_blocking: true  # Block requests when budget exceeded
+  
+  # Slack Alerting
+  alerting:
+    - slack
+  alerting_threshold: 80  # Alert when 80% of budget used
+  slack_webhook_url: os.environ/SLACK_WEBHOOK_URL
+
+litellm_settings:
+  # Enable detailed logging
+  set_verbose: true
+  
+  # Track spend per request - send traces to observability platforms
+  success_callback: ["langfuse"]
+
+
+
