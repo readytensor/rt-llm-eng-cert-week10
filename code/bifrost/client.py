@@ -26,7 +26,7 @@ def list_models() -> list[str]:
         models = [model["id"] for model in data.get("data", [])]
         return models
     except requests.exceptions.ConnectionError:
-        print("Error: Cannot connect to Bifrost. Is it running on port 8081?")
+        print("Error: Cannot connect to Bifrost. Is it running on port 8080?")
         return []
     except Exception as e:
         print(f"Error fetching models: {e}")
