@@ -44,6 +44,20 @@ def send_request(prompt: str, max_tokens: int = 256) -> str:
     return response.choices[0].message.content
 
 
+def send_request_stream(prompt: str, max_tokens: int = 256):
+    """Send streaming request to LiteLLM proxy. Yields tokens as they arrive."""
+    stream = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=max_tokens,
+        temperature=0.7,
+        stream=True,
+    )
+    for chunk in stream:
+        if chunk.choices[0].delta.content:
+            yield chunk.choices[0].delta.content
+
+
 def main():
     print(f"Connected to: {LITELLM_URL}")
     print(f"Model: {MODEL_NAME}")
@@ -61,8 +75,8 @@ def main():
         response = send_request(user_input)
         print(f"\nResponse:\n{response}")
     else:
-        # Interactive mode
-        print("Interactive mode. Type 'quit' to exit.\n")
+        # Interactive mode with streaming
+        print("Interactive mode (streaming). Type 'quit' to exit.\n")
 
         while True:
             try:
@@ -78,8 +92,10 @@ def main():
                 formatted_prompt = apply_chat_template(user_input)
                 print(f"\n[Formatted: {formatted_prompt[:100]}...]\n")
 
-                response = send_request(user_input)
-                print(f"Bot: {response}\n")
+                print("Bot: ", end="", flush=True)
+                for token in send_request_stream(user_input):
+                    print(token, end="", flush=True)
+                print("\n")
 
             except KeyboardInterrupt:
                 print("\nGoodbye!")
