@@ -9,6 +9,7 @@ This repository contains code examples for monitoring, observability, cost manag
 - **LangSmith** - LangChain's tracing and debugging platform
 - **LiteLLM** - Unified proxy for cost tracking, alerting, and multi-provider routing
 - **Bifrost** - LLM gateway for model switching and load balancing
+- **CloudWatch** - AWS infrastructure monitoring for Bedrock
 
 ---
 
@@ -208,6 +209,43 @@ docker stop $(docker ps -q --filter ancestor=maximhq/bifrost)
 
 ---
 
+### CloudWatch Custom Metrics
+
+Demonstrates publishing custom metrics (like TTFT) to AWS CloudWatch for Bedrock models.
+
+**Prerequisites:**
+- AWS credentials configured (via `.env` or AWS CLI)
+- A deployed model in AWS Bedrock
+
+**Run the example:**
+
+```bash
+python code/cloudwatch_client.py
+```
+
+**What it demonstrates:**
+
+| Feature | Description |
+|---------|-------------|
+| TTFT Measurement | Measures Time to First Token using streaming |
+| Custom Metrics | Publishes to `Bedrock/Custom` namespace |
+| Bedrock Streaming | Uses `invoke_model_with_response_stream` |
+
+**Environment variables required:**
+
+```bash
+AWS_ACCESS_KEY_ID=your-access-key
+AWS_SECRET_ACCESS_KEY=your-secret-key
+AWS_SESSION_TOKEN=your-session-token  # if using temporary credentials
+```
+
+**View metrics in CloudWatch:**
+1. Go to CloudWatch → Metrics → All metrics
+2. Look for `Bedrock/Custom` under Custom namespaces
+3. Select `ModelId` → `TTFT`
+
+---
+
 ## Lessons Overview
 
 | # | Lesson | Topic | Key Concepts |
@@ -217,11 +255,11 @@ docker stop $(docker ps -q --filter ancestor=maximhq/bifrost)
 | 2 | Observability & Tracing | Structured Logging | Logs, metrics, traces, spans, PII handling |
 | 3 | LangFuse | Hands-On Tool | `@observe()` decorator, nested traces, metadata |
 | 4 | LangSmith | Hands-On Tool | `@traceable()`, `wrap_openai()`, Playground |
-| 5 | CloudWatch | AWS Monitoring | Custom metrics, dashboards, alarms |
-| 6 | Alerting & Incident Response | Operations | Thresholds, runbooks, on-call, post-mortems |
-| 7 | Cost Monitoring | Optimization | LLM cascading, caching, speculative decoding |
-| 8 | LiteLLM | Hands-On Tool | Proxy setup, cost tracking, budget enforcement |
-| 9 | Bifrost | Hands-On Tool | Model gateway, routing, load balancing |
+| 5 | Alerting & Incident Response | Operations | Thresholds, runbooks, on-call, post-mortems |
+| 6 | Cost Monitoring | Optimization | LLM cascading, caching, speculative decoding |
+| 7 | LiteLLM | Hands-On Tool | Proxy setup, cost tracking, budget enforcement |
+| 8 | Bifrost | Hands-On Tool | Model gateway, routing, load balancing |
+| 9 | CloudWatch | AWS Monitoring | Bedrock/SageMaker metrics, dashboards, alarms |
 | 10 | Drift Detection | Quality Monitoring | Data drift, LLM-as-Judge, semantic monitoring |
 | 11 | Security | Protection | Prompt injection, guardrails, PII redaction |
 
@@ -234,10 +272,11 @@ rt-llm-eng-cert-week10/
 ├── code/
 │   ├── langfuse_tracing.py      # LangFuse tracing examples
 │   ├── langsmith_tracing.py     # LangSmith tracing examples
+│   ├── cloudwatch_client.py     # CloudWatch custom metrics (TTFT)
 │   ├── litellm/
 │   │   ├── docker-compose.yaml  # LiteLLM + PostgreSQL setup
 │   │   ├── litellm_config.yaml  # Model configuration
-│   │   └── client.py            # Interactive client
+│   │   └── client.py            # Interactive client (with streaming)
 │   └── bifrost/
 │       ├── docker-compose.yaml  # Bifrost gateway setup
 │       ├── config.json          # Provider configuration
@@ -251,6 +290,8 @@ rt-llm-eng-cert-week10/
 │   ├── lesson6-alerting-incident-response.md
 │   ├── lesson7-cost-monitoring.md
 │   ├── lesson8-litellm.md
+│   ├── lesson9-bifrost.md
+│   ├── lesson9-cloudwatch.md
 │   ├── lesson10-drift-detection.md
 │   ├── lesson11-security.md
 │   └── diagrams/
