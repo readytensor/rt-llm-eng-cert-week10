@@ -281,22 +281,6 @@ rt-llm-eng-cert-week10/
 │       ├── docker-compose.yaml  # Bifrost gateway setup
 │       ├── config.json          # Provider configuration
 │       └── client.py            # Interactive client with model switching
-├── lessons/
-│   ├── overview.md              # Unit overview
-│   ├── lesson1-monitoring-fundamentals.md
-│   ├── lesson2-observability-tracing.md
-│   ├── lesson3-langfuse.md
-│   ├── lesson4-langsmith.md
-│   ├── lesson6-alerting-incident-response.md
-│   ├── lesson7-cost-monitoring.md
-│   ├── lesson8-litellm.md
-│   ├── lesson9-bifrost.md
-│   ├── lesson9-cloudwatch.md
-│   ├── lesson10-drift-detection.md
-│   ├── lesson11-security.md
-│   └── diagrams/
-│       ├── guardrails-workflow.svg
-│       └── two-llm-pattern.svg
 ├── requirements.txt             # Python dependencies
 ├── .env                         # Environment variables (create this)
 └── README.md
